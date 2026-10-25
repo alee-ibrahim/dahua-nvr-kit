@@ -1,0 +1,4 @@
+# dahua-nvr-kit dependencies (Python 3.8+)
+requests>=2.25
+pycryptodome>=3.10      # AES for config-backup decrypt (decrypt_config.py, third_party tool)
+pillow>=9.0             # contact sheets (contact_sheet.py)

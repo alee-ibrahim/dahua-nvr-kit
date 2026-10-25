@@ -1,0 +1,13 @@
+{
+  "_comment": "Target channel layout per NVR for rearrange.py. Keys are NVR names (must match config.json). Inside each NVR, keys are 1-based channel numbers. ip = camera to bind, lens = lens/stream index (0 for single-lens), title = on-screen name. The camera must already be registered on that NVR. IPs are RFC5737 documentation ranges -- replace with yours.",
+  "nvr-01": {
+    "1": {"ip": "198.51.100.20", "lens": 0, "title": "Main Entrance"},
+    "2": {"ip": "198.51.100.21", "lens": 0, "title": "Lobby"},
+    "3": {"ip": "198.51.100.22", "lens": 0, "title": "Rear Door"},
+    "4": {"ip": "198.51.100.23", "lens": 0, "title": "Parking A"}
+  },
+  "nvr-02": {
+    "1": {"ip": "198.51.100.40", "lens": 0, "title": "Corridor 1"},
+    "2": {"ip": "198.51.100.41", "lens": 1, "title": "Corridor 1 (wide)"}
+  }
+}

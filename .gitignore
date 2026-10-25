@@ -1,0 +1,38 @@
+# secrets / site data -- never commit
+config.json
+*.creds.json
+cameras.creds.json
+secrets/
+.env
+
+# device config backups and decrypted trees
+*-Config-backup.json
+*-configExport*.backup
+*.backup
+*.dec
+*.tgz
+backups/
+decrypted/
+decrypted-input/
+
+# per-run change backups
+*-backup/
+*backup/
+encode-backup/
+rearrange-backup/
+repoint-backup/
+
+# snapshots / contact sheets
+snaps/
+snaps*/
+sheets/
+*.jpg
+*.jpeg
+*.png
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/

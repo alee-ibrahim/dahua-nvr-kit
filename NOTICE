@@ -1,0 +1,12 @@
+dahua-nvr-kit
+Copyright (c) 2026 Ali Ibrahim
+Licensed under the MIT License (see LICENSE).
+
+This product bundles the following third-party software:
+
+  third_party/DahuaConfigBackupDecEnc.py
+    Dahua config-backup decrypt/encrypt tool.
+    Author: bashis <mcw noemail eu> (2021)
+    Contributors: iTuneDVR (2023, XVR support)
+    Vendored unmodified, with the original author attribution header preserved.
+    Governed by its author's terms, not the MIT license above.

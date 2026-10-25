@@ -1,0 +1,16 @@
+{
+  "_comment": "Copy to ../config.json (gitignored) and fill in. Or set NVR_PASSWORD in the env. IPs here are RFC5737 documentation ranges -- replace with yours.",
+  "nvr": {
+    "username": "admin",
+    "password": "REPLACE_WITH_NVR_ADMIN_PASSWORD"
+  },
+  "nvrs": {
+    "nvr-01": "192.0.2.10",
+    "nvr-02": "192.0.2.11",
+    "nvr-03": "192.0.2.12"
+  },
+  "cameras": {
+    "198.51.100.20": {"username": "admin", "password": "REPLACE_WITH_CAMERA_PASSWORD"},
+    "198.51.100.21": {"username": "admin", "password": "REPLACE_WITH_CAMERA_PASSWORD"}
+  }
+}
