@@ -104,13 +104,16 @@ Fixes are **camera-side** (`fix_encode.py`), backup-first and verify-after:
 - **Dahua Encode CGI** (`configManager.cgi?action=setConfig&Encode[...]`) -- tune a Dahua
   camera's main/sub directly.
 
-## 6. Known limitation -- ONVIF main-stream profile selection is NOT exposed to the API
+## 6. Known limitation -- ONVIF main-stream profile selection is exposed by NEITHER the API NOR the web UI
 
-On the NVR firmware this kit was built against, you **cannot** choose which ONVIF profile the
-NVR subscribes to as a channel's **main** stream via the RPC2 API. This matters for legacy
-cameras (e.g. some Samsung/Hanwha models) whose factory **main** profile is MJPEG and is
+On the Dahua NVR firmware this kit was built against (fw **4.005 / 4.006 / 5.001**), you
+**cannot** choose which ONVIF profile the NVR subscribes to as a channel's **main** stream --
+not via the RPC2 API, and (newly confirmed) **not via the NVR web UI either**. This matters for
+legacy cameras (e.g. some Samsung/Hanwha models) whose factory **main** profile is MJPEG and is
 firmware-locked on the camera -- you can prepare a clean H.264 profile on the camera, but the
-NVR keeps pulling the MJPEG one as main.
+NVR keeps pulling the MJPEG one as main. Under `ProtocolType=Onvif` the NVR always auto-derives
+the main profile from the camera and picks its primary (MJPEG) profile; it surfaces no
+main/sub ONVIF-profile picker anywhere.
 
 What was tried (each applied to one pilot channel, then reverted), all failed:
 
@@ -128,12 +131,43 @@ No other config holds the mapping (`RemoteChannel` has only `{BufDelay, Channel,
 Enable}`); candidate methods like `getRemoteDeviceStreamCaps`, `getDeviceProfiles`,
 `RemoteDevice.getProfiles` return Method-not-found.
 
-**Do it in the local web/monitor UI**, which exposes an ONVIF main/sub profile picker the API
-does not:
+### The web-UI workaround was ATTEMPTED and is UNAVAILABLE on this firmware
 
-> Camera (Registration) -> select the device -> Modify / Encode -> set **Main Stream profile**
-> to the desired H.264 profile (keep **Sub Stream** on the light H.264 profile) -> Save.
+An earlier version of this note suggested doing the swap in the local web/monitor UI via
+*Camera (Registration) -> Modify / Encode -> set Main Stream profile*. **That click-path does
+not exist on these units and the workaround does NOT work.** It was driven end-to-end with a
+headless browser (no camera/view plugin is needed for the config pages -- login and all config
+dialogs are plain HTML/JS), and the conclusion was negative:
 
-Repeat per affected channel. Everything else (sub-stream trim, Dahua main-fps fixes) is already
-API-applicable, so only the main-stream profile swap for firmware-locked-MJPEG cameras needs
-the UI.
+- **Camera Settings > Encode, Main Stream "Compression" dropdown offers MJPEG only** -- no
+  H.264/H.265 option at all. The page mirrors the camera's locked JPEG main encoder and cannot
+  reach the separate H.264 encoder/profile. (The Sub Stream dropdown does offer H.264 -- hence
+  sub-stream trimming works; the main does not.)
+- **The device Modify dialog (Manufacturer = ONVIF) has no main/sub or ONVIF-profile selector**
+  -- only Channel, Manufacturer, IP, ports, credentials, remote channel, decode strategy,
+  encryption, server type.
+- **Switching the Modify dialog to the native Hanwha/Samsung protocol shows the same field set,
+  also with no profile selector.**
+
+So the main-stream profile swap for firmware-locked-MJPEG ONVIF cameras is **ATTEMPTED AND
+UNAVAILABLE on Dahua NVR fw 4.005 / 4.006 / 5.001** -- there is no API method and no UI control
+for it. Everything else (sub-stream trim, Dahua main-fps fixes) remains API-applicable.
+
+### Realistic options
+
+Since the main profile cannot be pinned on these NVRs, the practical choices are:
+
+1. **Accept the trimmed-H.264-sub multiview win.** Tiled multiview decodes the **sub** stream,
+   which the kit already trims to a light H.264 tile -- so tiled live view is fixed. Only
+   single-camera **fullscreen** still decodes one cheap ~5 fps MJPEG main at a time, which one
+   decoder handles comfortably. For many fleets this is a good-enough outcome with zero hardware
+   spend.
+2. **Replace the cameras with H.264-primary models.** The clean long-term fix: swap the
+   MJPEG-main legacy cameras for ones whose main profile is H.264/H.265, so the NVR pulls an
+   efficient main automatically.
+3. **Move to a VMS / firmware that can pin the ONVIF main profile** -- a software VMS or newer
+   firmware that lets you choose which ONVIF profile is subscribed as main, or that can pull the
+   camera's secondary H.264 RTSP profile directly. Note: on these NVRs the direct-RTSP route
+   (`ProtocolType=General` + explicit RTSP URL to the H.264 profile) produced **undecodable
+   video / HTTP 500 snapshots** and had to be reverted, so any RTSP/VMS approach must be proven
+   on a non-production unit first.
