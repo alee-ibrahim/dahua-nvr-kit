@@ -9,7 +9,9 @@ description: >-
   SetVideoEncoderConfiguration, Samsung/Hanwha SUNAPI, or the Dahua Encode CGI; verify channels
   online with labelled contact sheets; or to understand why a firmware-locked-MJPEG camera's
   ONVIF main-stream profile cannot be changed (not via the API and not via the NVR web UI on
-  these firmwares). For NVRs/cameras you own or administer.
+  these firmwares). Also for exporting footage / MP4 evidence clips from NVR recordings, which is
+  done with the companion tool nvrclip (Dahua + Hikvision) — see docs/footage-export.md. For
+  NVRs/cameras you own or administer.
 ---
 
 # dahua-nvr-kit
@@ -134,6 +136,19 @@ move to a VMS/firmware that can pin the ONVIF main profile (direct General+RTSP 
 profile gave undecodable video on these NVRs, so prove any such route on a non-production unit
 first). Everything else (sub-stream trim, Dahua main-fps fixes) is API-applicable.
 
+## Exporting footage / clips
+
+This kit **manages** the NVRs; it does **not** pull recordings. To export exact MP4 clips from
+the recordings (evidence footage), use **nvrclip** (https://github.com/yashau/nvrclip, credit:
+yashau) — the go-to for pulling MP4 evidence clips. Do **not** reinvent RTSP dumping. It handles
+Dahua **and** Hikvision, corrects recorder clock drift, stitches multi-part spans, and trims to
+the exact window. Install: `go install github.com/yashau/nvrclip/cmd/nvrclip@latest` with ffmpeg
+on PATH. NVR creds follow the same env/config pattern as this kit (never hardcoded). Quick shape:
+`nvrclip download nvr-01 --channel front-entrance --from "YYYY-MM-DD HH:MM" --to "..."`, or
+`--around "..." --minutes N`. Full install, flags, encoding modes, and bulk export are in
+**`docs/footage-export.md`** — read it before exporting. nvrclip is referenced, not bundled
+(upstream license unstated).
+
 ## Files
 
 - `scripts/lib/` -- `dahua_rpc.py` (RPC2 session-cookie client), `onvif.py`, `sunapi.py`,
@@ -141,4 +156,5 @@ first). Everything else (sub-stream trim, Dahua main-fps fixes) is API-applicabl
 - `scripts/` -- `survey.py`, `export_backup.py`, `decrypt_config.py`, `recover_creds.py`,
   `rearrange.py`, `verify.py`, `contact_sheet.py`, `diagnose_encode.py`, `fix_encode.py`.
 - `third_party/DahuaConfigBackupDecEnc.py` -- vendored v1 decrypter (credit: bashis).
-- `docs/METHOD.md` -- format/schema/limitation notes. `examples/` -- sample configs/maps.
+- `docs/METHOD.md` -- format/schema/limitation notes. `docs/footage-export.md` -- clip export
+  via nvrclip. `examples/` -- sample configs/maps.

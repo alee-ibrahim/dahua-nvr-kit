@@ -24,6 +24,10 @@ camera encode profiles. Built from real field work and generalized -- no site da
 - Documented **known limitation**: these NVRs don't expose ONVIF main-stream profile selection
   via API, so a firmware-locked-MJPEG camera's main must be switched in the NVR web UI
   (exact click path in `docs/METHOD.md`).
+- **Footage / clip export** of exact MP4 evidence clips from the recordings via the recommended
+  companion tool **[nvrclip](https://github.com/yashau/nvrclip)** (credit: yashau) — Dahua and
+  Hikvision, clock-corrected, multi-part spans, timestamp-trimmed. Referenced, not bundled; see
+  `docs/footage-export.md`.
 
 ## Why session-cookie auth
 
@@ -89,11 +93,16 @@ Back up before changing anything; change one device at a time; verify (snapshot,
 `Connected`) and be ready to revert; never loop on a failed login; never commit secrets. The
 scripts follow these by default.
 
-## Credits
+## Credits / related tools
 
 `third_party/DahuaConfigBackupDecEnc.py` is the v1 config-backup decrypter by **bashis**
 (with XVR contributions by iTuneDVR), vendored unmodified with its attribution header intact.
 See `third_party/README.md` and `NOTICE`.
+
+**[nvrclip](https://github.com/yashau/nvrclip)** by **yashau** is the recommended companion tool
+for **exporting MP4 clips** from NVR recordings (Dahua + Hikvision). It is **referenced, not
+bundled** — its upstream license is unstated, so check before redistributing. See
+`docs/footage-export.md`.
 
 ## License
 

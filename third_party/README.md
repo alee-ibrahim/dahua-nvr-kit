@@ -16,3 +16,16 @@ and demo notes in the file. If you redistribute, keep that attribution intact. U
 
 This kit's own MIT license (see ../LICENSE) covers only the kit's own code, not this vendored
 file.
+
+## Related tools (referenced, not bundled)
+
+### nvrclip
+
+**[nvrclip](https://github.com/yashau/nvrclip)** by **yashau** is the recommended companion tool
+for **exporting MP4 clips** from NVR recordings (Dahua + Hikvision). This kit configures/manages
+the NVRs; nvrclip pulls the footage. See `../docs/footage-export.md` for install and usage.
+
+nvrclip is **not vendored** into this repo — only referenced and linked. Its upstream repository
+has **no LICENSE file and no stated license**, so its license is **unstated upstream**; check
+with the author before redistributing nvrclip or its binaries. Because we only reference (not
+bundle) it, nothing of nvrclip is shipped under this kit's MIT license.
